@@ -25,6 +25,17 @@ const getProjects = async () => {
 }
 
 /**
+ * Récupération des catégories de l'API
+ * @returns {Promise<Json>}
+ */
+
+const getCategories = async () => {
+    let res = await fetch(urlApi + "/categories");
+    let categories = await res.json();
+    return categories;
+}
+
+/**
  * Création des éléments HTML des projets
  * @param {JSON} projects
  */
@@ -42,10 +53,8 @@ function addProjects(projects) {
 }
 
 // On vide le container "gallery"
-const emptyGallery = () => {
-    while (divGallery.firstChild) {
-    divGallery.removeChild(divGallery.firstChild);
-    }
+function emptyGallery() {
+    divGallery.innerHTML = "";
 }
 
 /**
@@ -121,7 +130,7 @@ function useFilter() {
 }
 
 // Génération de l'affichage des projets et des filtres avec 2 appels à l'API
-/*
+
 function generateProjects() {
     getProjects().then(json => {
         if (json) {
@@ -131,7 +140,7 @@ function generateProjects() {
             console.log("Problèmes d'accès au serveur");
         }})
 }
-   
+ /*  
 function generateFilters()  {
     getProjects().then(projects => {
         let categories = getFilterCategories(projects);
@@ -199,8 +208,7 @@ function createEditUserPic () {
     userPic.appendChild(editPic);
     let editPicIcon = document.createElement("i");
     editPicIcon.setAttribute("class", "fa-regular fa-pen-to-square");
-    let editPicText = document.createElement("a");
-    editPicText.setAttribute("href", "")
+    let editPicText = document.createElement("button");
     editPicText.innerText = ("modifier");
     editPic.appendChild(editPicIcon);
     editPic.appendChild(editPicText);
@@ -213,8 +221,7 @@ function createEditProjects () {
     projects.appendChild(editProjects);
     let editProjectsIcon = document.createElement("i");
     editProjectsIcon.setAttribute("class", "fa-regular fa-pen-to-square");
-    let editProjectsText = document.createElement("a");
-    editProjectsText.setAttribute("href", "")
+    let editProjectsText = document.createElement("button");
     editProjectsText.innerText = ("modifier");
     editProjects.appendChild(editProjectsIcon);
     editProjects.appendChild(editProjectsText);
@@ -253,7 +260,7 @@ function logout () {
     })
 }
 
-function handleEditPage() {
+function generateEditPage() {
     createEditPage();
 if (token !== null) {
     logout()
@@ -262,4 +269,370 @@ if (token !== null) {
 }
 }
 
-handleEditPage();
+generateEditPage();
+
+// Gestion de la modale
+/**
+ * Création des éléments HTML des projets
+ * @param {JSON} projects
+ */
+function addModalProjects(projects) {                        
+    for (let project of projects) {
+        let newFigure = document.createElement("figure");
+        let modalDiv1 = document.querySelector(".modal-div1")       
+        modalDiv1.appendChild(newFigure);    
+        let moveIcon = document.createElement("i");
+        moveIcon.setAttribute("class", "fa-solid fa-arrows-up-down-left-right")
+        moveIcon.setAttribute("style", "display: none;")
+        let modalImg = document.createElement("div");
+        modalImg.setAttribute("class", "modal-img");
+        modalImg.setAttribute("id", project.id)                 
+        let newImage = document.createElement("img");          
+        newImage.src = project.imageUrl;                        
+        let newTitle = document.createElement("figcaption");    
+        newTitle.innerText = "éditer";   
+
+        let trashIcon = document.createElement("i");
+        trashIcon.setAttribute("class", "fa-solid fa-trash-can");                
+        modalImg.append(trashIcon, newImage);
+        newFigure.append(moveIcon, modalImg, newTitle);  
+    }
+    selectProject();
+}
+
+function galleryModal () { 
+    getProjects()
+    .then(projects => {
+        if (document.querySelector(".modal") !== null) {
+            addModalProjects(projects)
+        } 
+})}
+
+
+function createModal () {
+    let modal = document.createElement("aside");
+    modal.setAttribute("class", "modal");
+    modal.setAttribute("style", "display: none;");
+    document.querySelector("body").appendChild(modal);
+    let modalWrapper = document.createElement("section")
+    modalWrapper.setAttribute("class", "modal-wrapper");
+    modal.appendChild(modalWrapper)
+    let modalIcons = document.createElement("div");
+    modalIcons.setAttribute("class", "modal-icons")
+    let modalReturn = document.createElement("i");
+    modalReturn.setAttribute("class", "fa-solid fa-arrow-left");
+    modalReturn.setAttribute("id", "modal-return");
+    modalReturn.setAttribute("style", "display : none;")
+    let modalExit = document.createElement("i");
+    modalExit.setAttribute("class", "fa-solid fa-xmark");
+    modalExit.setAttribute("id", "modal-exit");
+    modalIcons.append(modalExit, modalReturn);
+    let modalTitle = document.createElement("p")
+    modalTitle.setAttribute("class", "modal-title");
+    modalTitle.innerText = ("Galerie photo");
+    let modalDiv1 = document.createElement("div");
+    modalDiv1.setAttribute("class", "modal-div1");
+    modalDiv1.setAttribute("id", "modal-div1")
+    let modalDiv2 = document.createElement("div");
+    modalDiv2.setAttribute("class", "modal-div2");
+    modalDiv2.setAttribute("style", "display: none;");
+    let modalForm = document.createElement("form")
+    modalForm.setAttribute("action", urlApi + "/works");
+    modalForm.setAttribute("method", "post")
+    modalForm.setAttribute("class", "modal-form")
+    let formImg = document.createElement("div");
+    formImg.setAttribute("class", "form-img")
+    let previewDiv = document.createElement("div");
+    previewDiv.setAttribute("class", "preview-div");
+    let previewImg = document.querySelector("i");
+    previewImg.setAttribute("class", "fa-regular fa-image");
+    previewImg.setAttribute("id", "preview-img");
+    let currentImg = document.createElement('img');
+    currentImg.setAttribute("class", "current-img")
+    currentImg.setAttribute("style", "display: none;")
+    previewDiv.append(previewImg, currentImg);
+    let labelImg = document.createElement("label");
+    labelImg.setAttribute("for", "img");
+    labelImg.setAttribute("class", "label-img");
+    labelImg.innerText = "+ Ajouter une photo";
+    let inputImg = document.createElement("input");
+    inputImg.setAttribute("type", "file");
+    inputImg.setAttribute("name", "img")
+    inputImg.setAttribute("id", "img");
+    inputImg.setAttribute("style", "display: none;")
+    inputImg.setAttribute("accept", ".jpg, .jpeg, .png")
+    let textImg = document.createElement("p");
+    textImg.setAttribute("class", "text-img");
+    textImg.innerText = "jpg, png : 4mo max"
+    formImg.append(previewDiv, labelImg, inputImg, textImg)
+    let formName = document.createElement("label");
+    formName.setAttribute("for", "name");
+    formName.innerText = ("Titre");
+    let inputName = document.createElement("input");
+    inputName.setAttribute("type", "text");
+    inputName.setAttribute("name", "title");
+    inputName.setAttribute("id", "title");
+    let formCategory = document.createElement("label");
+    formCategory.setAttribute("for", "category");
+    formCategory.innerText = ("Catégorie");
+    let inputCategory = document.createElement("select");
+    inputCategory.setAttribute("name", "category")
+    inputCategory.setAttribute("id", "category")
+    let emptyCategory = document.createElement("option")
+    emptyCategory.setAttribute("value", "")
+    emptyCategory.innerText = ("");
+    inputCategory.appendChild(emptyCategory)
+    getCategories().then(categories => {
+        for (let category of categories) {
+            let categoryOption = document.createElement("option");
+            categoryOption.setAttribute("value", category.name);
+            categoryOption.innerText = category.name;
+            inputCategory.appendChild(categoryOption);
+        }
+       })
+    let formSubmit = document.createElement("label");
+    formSubmit.setAttribute("for", "submit");
+    formSubmit.setAttribute("id", "modal-form-submit");
+    let inputSubmit = document.createElement("input");
+    inputSubmit.setAttribute("type", "submit");
+    inputSubmit.setAttribute("value", "Valider");
+    inputSubmit.setAttribute("id", "modal-submit-button");
+    inputSubmit.innerHTML = "+ Ajouter photo";
+    modalForm.append(formImg, formName, inputName, formCategory, inputCategory, formSubmit, inputSubmit)
+    modalDiv2.appendChild(modalForm);
+    let modalAddButton = document.createElement("button");
+    modalAddButton.setAttribute("class", "modal-add-button");
+    modalAddButton.innerText = "Ajouter une photo"
+    let modalDeleteButton = document.createElement("button");
+    modalDeleteButton.setAttribute("class", "modal-delete-button");
+    modalDeleteButton.innerText = "Supprimer la galerie";
+    modalWrapper.append(modalIcons, modalTitle, modalDiv1, modalDiv2, modalAddButton, modalDeleteButton, modalDeleteButton)
+    document.querySelector("#img").addEventListener('change', updateFormImg);
+}
+
+function updateFormImg () {
+    document.querySelector("#preview-img").setAttribute("style", "display: none;");
+    document.querySelector(".label-img").setAttribute("style", "display: none;");
+    document.querySelector(".text-img").setAttribute("style", "display: none;");
+    let currentFile = document.querySelector("#img").files;
+    let currentImg = document.querySelector('.current-img');
+    currentImg.removeAttribute("style", "display: none;")
+    currentImg.src = window.URL.createObjectURL(currentFile[0]);
+}
+
+function removeFormElements () {
+    document.querySelector("#preview-img").removeAttribute("style", "display: none;");
+    document.querySelector(".label-img").removeAttribute("style", "display: none;");
+    document.querySelector(".text-img").removeAttribute("style", "display: none;");
+    document.querySelector('.current-img').setAttribute("style", "display: none;");
+    document.querySelector('.current-img').innerHTML = ""
+    document.querySelector("#title").value = ""
+    document.querySelector("#category").value = ""
+}
+
+let modal = null;
+
+function openModal(event) {
+    const target = document.querySelector(".modal")
+    target.removeAttribute("style", "display: none;")
+    modal = target;
+    modal.addEventListener("click", closeModal);
+    modal.querySelector("#modal-exit").addEventListener("click", closeModal);
+    modal.querySelector(".modal-wrapper").addEventListener("click", stopPropagation)
+}
+
+function closeModal(event) {
+    document.querySelector(".edit-menu").setAttribute("style", "position: absolute");
+    modal.setAttribute("style", "display: none;")
+    modal.removeEventListener("click", closeModal);
+    modal.querySelector(".modal-wrapper").removeEventListener("click", stopPropagation)
+    emptyModalForm();
+    modal = null;
+}
+
+function stopPropagation (event) {
+    event.stopPropagation();
+}
+
+function showModal (event) {
+    document.querySelector(".edit-projects").addEventListener("click", openModal)
+}
+
+function emptyModal () {
+    let modalDiv1 = document.querySelector(".modal-div1")
+    modalDiv1.innerHTML = "";
+}
+
+async function deleteProject(id) {
+    try {
+    let res = await fetch(urlApi + "/works/" + id, {
+        method: "DELETE", 
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    }); 
+    if (!res.ok) {
+        throw new Error("Erreur lors de la suppression du projet");
+    }
+    console.log("Le projet a été supprimé avec succès");
+    emptyModal();
+    galleryModal();
+    emptyGallery();
+    generateProjects();
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+function selectProject() {
+        const modalDeleteIcons = document.querySelectorAll(".modal-img > i")
+        for (let currentDeleteIcon of modalDeleteIcons) {
+            currentDeleteIcon.addEventListener("click", function(event) {
+                let id = currentDeleteIcon.parentElement.id;
+                deleteProject(id);
+            })  
+        }
+    }
+
+
+function deleteModal() {
+    document.querySelector(".modal-delete-button").addEventListener("click", function() {
+        let modalProjects = (Array.from(document.querySelectorAll(".modal-img")))
+        modalProjects.forEach(function(modalProject) {
+            let id = modalProject.id;
+            deleteProject(id);
+        }
+    )}
+    )
+}
+
+function addImg() {
+    document.querySelector(".modal-add-button").addEventListener("click", function() {
+        document.querySelector("#modal-return").removeAttribute("style", "display: none;")
+        document.querySelector(".modal-title").innerText = ("Ajout photo");
+        document.querySelector(".modal-div1").setAttribute("style", "display: none;");
+        document.querySelector(".modal-div2").removeAttribute("style", "display: none;")
+        document.querySelector(".modal-add-button").setAttribute("style", "display: none;");
+        document.querySelector(".modal-delete-button").setAttribute("style", "display: none;");
+        returnModalGallery();
+    })
+}
+
+function returnModalGallery() {
+    document.querySelector("#modal-return").addEventListener("click",emptyModalForm)
+}
+
+function emptyModalForm () {
+    document.querySelector("#modal-return").setAttribute("style", "display: none;")
+    document.querySelector(".modal-title").innerText = ("Galerie photo");
+    document.querySelector(".modal-div1").removeAttribute("style", "display: none;");
+    document.querySelector(".modal-div2").setAttribute("style", "display: none;")
+    document.querySelector(".modal-add-button").removeAttribute("style", "display: none;");
+    document.querySelector(".modal-delete-button").removeAttribute("style", "display: none;");
+    removeFormElements();
+}
+
+function submitProject() {
+    changeInputModalButton();
+    let formSubmit = document.querySelector(".modal-form");
+    const modalButton = document.querySelector("#modal-submit-button")
+    formSubmit.addEventListener("submit", async function(event) {
+        event.preventDefault();
+        const imageUrl = (formSubmit.img).files[0];
+        const title = (formSubmit.title).value;
+        const formCategory = (formSubmit.category).value;
+        let category = null;
+        if (formCategory === "Objets") {
+            category = 1
+        } else if (formCategory === "Appartements") {
+            category = 2
+        } else if (formCategory === "Hotels & restaurants") {
+            category = 3
+        } 
+        changeInputModalButton();
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("image", imageUrl);
+        formData.append("category", category);
+        const res= await fetch(urlApi + "/works", {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token,
+            },
+            body: formData,
+        })
+        
+        if (res.ok) {
+            console.log("Le projet a été ajouté avec succès !")
+            emptyModal();
+            galleryModal();
+            emptyGallery();
+            generateProjects();
+            emptyModalForm();
+            closeModal();
+        } else {
+            alert("Vous devez remplir tous les champs")
+        }
+    })
+}
+
+function changeInputModalButton () {
+    let formImg = document.querySelector(".current-img");
+    formImg.addEventListener("change", function (event) {
+        console.log(formImg)
+        if (formImg.style !== "display: none;" || formTitle.value !==null || formCategory.value !== "") {
+            console.log("gris");
+        } else {
+            console.log("vert")
+        }
+    })
+    let formTitle = document.querySelector("#title");
+    formTitle.addEventListener("change", function (event) {
+        console.log(formTitle)
+        if (formImg.style !== "display: none;" || formTitle.value !==null || formCategory.value !== "") {
+            console.log("gris");
+        } else {
+            console.log("vert")
+        }
+    })
+    let formCategory = document.querySelector("#category");
+    formCategory.addEventListener("change", function (event) {
+        console.log(formCategory)
+        if (formImg.style !== "display: none;" || formTitle.value !==null || formCategory.value !== "") {
+            console.log("gris");
+        } else {
+            console.log("vert")
+        }
+    })
+
+}
+    
+/* A compléter 
+function moveIcon() {
+    const modalDiv1 = document.querySelector(".modal-div1")
+    const moveIcons = modalDiv1.querySelectorAll("div")
+    for (let currentMoveIcon of moveIcons) {
+        currentMoveIcon.addEventListener("click", function(event) {
+            currentMoveIcon.focus();
+            if (currentMoveIcon === focus) {
+                console.log(currentMoveIcon)
+            }
+            console.log(currentMoveIcon)
+        })  
+        
+    } 
+}
+*/
+
+
+function generateModal() {
+    createModal();
+    galleryModal();
+    showModal();
+    deleteModal();
+    addImg();
+    submitProject();
+}
+
+generateModal();

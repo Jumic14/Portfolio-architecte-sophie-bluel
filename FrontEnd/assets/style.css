@@ -315,15 +315,6 @@ margin: auto;
 	display: flex;
 }
 
-.edit-pic a {
-	padding: 0px 10px;
-	text-decoration: none;
-}
-.edit-pic a:visited, .edit-projects a:visited {
-	text-decoration: none;
-	color: black;
-}
-
 .edit-projects {
 	font-size: 14px;
 	font-weight: 500;
@@ -331,7 +322,223 @@ margin: auto;
 	font-family: 'Work Sans';
 }
 
-.edit-projects a {
+.edit-pic button, .edit-projects button {
+	font-family: "Work Sans";
+	font-size: 14px;
+	color: black;
+	background: white;
+	border: 0px;
 	padding: 0px 10px;
 	text-decoration: none;
+}
+
+.edit-pic a:visited, .edit-projects a:visited {
+	text-decoration: none;
+	color: black;
+}
+
+.edit-pic .fa-regular, .edit-projects .fa-regular {
+	color: black;
+}
+
+/* Gestion de la modale */
+.modal {
+	position: fixed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	max-width: 1140px;
+	background: rgba(0, 0, 0, 0.3);
+}
+
+.modal-wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 60%;
+	background: white;
+	border-radius: 10px;
+}
+
+.modal-icons {
+	width: 100%;
+	display: flex;
+	flex-direction: row-reverse;
+	justify-content: space-between;
+	padding: 15px 0px;
+}
+#modal-return {
+	align-self: flex-start;
+	padding-left: 20px;
+}
+#modal-exit {
+	align-self: flex-end;
+	padding-right: 20px;
+}
+
+.modal-title {
+	font-family: "Work Sans";
+	font-size: 26px;
+	font-weight: 400;
+	padding: 10px 0px;
+}
+
+.modal-div1 {
+	width: 70%;
+	padding: 30px 0px;
+	border-bottom: 1px solid #B3B3B3;
+	display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
+}
+
+.modal-div1 img {
+	height: 90px;
+	width: auto;
+}
+
+.fa-trash-alt:before, .fa-trash-can:before{
+	display: flex;
+	align-items: center;
+	position: absolute;
+	font-size: 9px;
+	margin-top: -85px;
+	margin-left: 50px;
+	color: white;
+	background-color: #000000;
+	border-radius: 2px;
+	padding: 3px;
+}
+
+.modal-div2 {
+	width: 70%;
+	padding: 30px 0px;
+	display: flex;
+	flex-direction: column;
+}
+
+.modal-form {
+	display: flex;
+	flex-direction: column;
+}
+
+.form-img {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+    background: #E8F1F7;
+    border-radius: 3px;
+}
+
+#preview-img {
+	font-size: 45px;
+	background: #E8F1F7;
+    color: #B9C5CC; 
+	padding: 20px 0px 10px 0px;	
+}
+
+.modal-form label {
+	font-weight: 500;
+	color: #3D3D3D;
+	margin: 10px 0px;
+
+}
+
+.current-img {
+	display: flex;
+	align-items: center;
+	height: 192px;
+	width: auto;
+}
+
+.label-img {
+	background: #CBD6DC;
+	border-radius: 50px;
+	color: #306685;
+	padding: 10px 30px;
+}
+
+.text-img {
+	font-size: 10px;
+	font-weight: 400;
+	padding-bottom: 20px;
+	color:#444444
+}
+#title {
+	height: 51px;
+	background: white;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	border: 0px;
+	margin: 10px 0px;
+	font-size: 14px;
+	color: #444444;
+}
+
+#category {
+	height: 51px;
+	background: white;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	border: 0px;
+	color:#6C6C6C;
+	margin: 10px 0px;
+	font-size: 14px;
+	color: #444444;
+}
+
+.modal-add-button {
+	font-family: "Syne";
+	font-size: 14px;
+	font-weight: 700;
+	color: white;
+	background: #1D6154;
+	border: 0px;
+	border-radius: 60px;
+	padding: 10px 0px;
+	width: 250px;
+	margin: 30px 0px 15px 0px;
+}
+
+.modal-delete-button {
+	font-family: "Syne";
+	font-size: 14px;
+	font-weight: 400;
+	color: #D65353;
+	background: white;
+	border: 0px;
+	padding: 10px 0px;
+	width: 250px;
+	margin: 0px 0px 40px 0px;
+}
+
+#modal-submit-button {
+	font-family: "Syne";
+	font-size: 14px;
+	font-weight: 700;
+	color: white;
+	background: #A7A7A7;
+	border: 0px;
+	border-radius: 60px;
+	padding: 10px 0px;
+	width: 250px;
+	margin: 30px 0px;
+	align-self: center;
+	
+}
+
+#modal-form-submit {
+	border-top: 1px solid #B3B3B3;
+	margin-top: 40px;
+}
+@media screen and (max-width: 500px) {
+.filters {
+	flex-wrap: wrap;
+}
+
+.filter {
+	margin: 10px;
+}
 }
