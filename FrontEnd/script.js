@@ -276,14 +276,12 @@ generateEditPage();
  * Création des éléments HTML des projets
  * @param {JSON} projects
  */
-function addModalProjects(projects) {                        
+function addModalProjects(projects) {  
+    const modalDiv1 = document.querySelector(".modal-div1")                       
     for (let project of projects) {
         let newFigure = document.createElement("figure");
-        let modalDiv1 = document.querySelector(".modal-div1")       
+      
         modalDiv1.appendChild(newFigure);    
-        let moveIcon = document.createElement("i");
-        moveIcon.setAttribute("class", "fa-solid fa-arrows-up-down-left-right")
-        moveIcon.setAttribute("style", "display: none;")
         let modalImg = document.createElement("div");
         modalImg.setAttribute("class", "modal-img");
         modalImg.setAttribute("id", project.id)                 
@@ -295,8 +293,15 @@ function addModalProjects(projects) {
         let trashIcon = document.createElement("i");
         trashIcon.setAttribute("class", "fa-solid fa-trash-can");                
         modalImg.append(trashIcon, newImage);
-        newFigure.append(moveIcon, modalImg, newTitle);  
+        newFigure.append(modalImg, newTitle);  
     }
+    if (modalDiv1.firstChild === null) {
+        return
+    }
+    let moveIcon = document.createElement("i");
+    moveIcon.setAttribute("class", "fa-solid fa-arrows-up-down-left-right")
+    modalDiv1.firstChild.appendChild(moveIcon);
+    
     selectProject();
 }
 
@@ -378,10 +383,9 @@ function createModal () {
     let inputCategory = document.createElement("select");
     inputCategory.setAttribute("name", "category")
     inputCategory.setAttribute("id", "category")
-    let emptyCategory = document.createElement("option")
-    emptyCategory.setAttribute("value", "")
-    emptyCategory.innerText = ("");
-    inputCategory.appendChild(emptyCategory)
+    let defaultCategory = document.createElement("option");
+    defaultCategory.setAttribute("value", "");
+    inputCategory.appendChild(defaultCategory);
     getCategories().then(categories => {
         for (let category of categories) {
             let categoryOption = document.createElement("option");
@@ -396,8 +400,7 @@ function createModal () {
     let inputSubmit = document.createElement("input");
     inputSubmit.setAttribute("type", "submit");
     inputSubmit.setAttribute("value", "Valider");
-    inputSubmit.setAttribute("id", "modal-submit-button");
-    inputSubmit.innerHTML = "+ Ajouter photo";
+    inputSubmit.setAttribute("class", "modal-submit-button"); 
     modalForm.append(formImg, formName, inputName, formCategory, inputCategory, formSubmit, inputSubmit)
     modalDiv2.appendChild(modalForm);
     let modalAddButton = document.createElement("button");
@@ -530,13 +533,13 @@ function emptyModalForm () {
     document.querySelector(".modal-div2").setAttribute("style", "display: none;")
     document.querySelector(".modal-add-button").removeAttribute("style", "display: none;");
     document.querySelector(".modal-delete-button").removeAttribute("style", "display: none;");
+    document.querySelector(".modal-submit-button").setAttribute("id", "grey")
     removeFormElements();
 }
 
 function submitProject() {
     changeInputModalButton();
     let formSubmit = document.querySelector(".modal-form");
-    const modalButton = document.querySelector("#modal-submit-button")
     formSubmit.addEventListener("submit", async function(event) {
         event.preventDefault();
         const imageUrl = (formSubmit.img).files[0];
@@ -550,7 +553,7 @@ function submitProject() {
         } else if (formCategory === "Hotels & restaurants") {
             category = 3
         } 
-        changeInputModalButton();
+
         const formData = new FormData();
         formData.append("title", title);
         formData.append("image", imageUrl);
@@ -578,53 +581,47 @@ function submitProject() {
 }
 
 function changeInputModalButton () {
-    let formImg = document.querySelector(".current-img");
-    formImg.addEventListener("change", function (event) {
-        console.log(formImg)
-        if (formImg.style !== "display: none;" || formTitle.value !==null || formCategory.value !== "") {
-            console.log("gris");
+    let submitButton = document.querySelector(".modal-submit-button")
+    submitButton.setAttribute("id", "grey")
+    let formImgInput = document.querySelector("#img");
+    let formImg = document.querySelector(".label-img");
+    let previewImg = document.querySelector(".current-img");
+    formImgInput.addEventListener("change", function (event) {
+        console.log(previewImg)
+        console.log(formCategory.value)
+        if (formImg.hasAttribute("style") === true) {
+            if (formTitle.value && formCategory.value !== "") {
+                submitButton.removeAttribute("id", "grey")
+            }
         } else {
-            console.log("vert")
+            submitButton.setAttribute("id", "grey")
         }
     })
     let formTitle = document.querySelector("#title");
     formTitle.addEventListener("change", function (event) {
-        console.log(formTitle)
-        if (formImg.style !== "display: none;" || formTitle.value !==null || formCategory.value !== "") {
-            console.log("gris");
-        } else {
-            console.log("vert")
-        }
-    })
-    let formCategory = document.querySelector("#category");
-    formCategory.addEventListener("change", function (event) {
-        console.log(formCategory)
-        if (formImg.style !== "display: none;" || formTitle.value !==null || formCategory.value !== "") {
-            console.log("gris");
-        } else {
-            console.log("vert")
-        }
-    })
-
-}
-    
-/* A compléter 
-function moveIcon() {
-    const modalDiv1 = document.querySelector(".modal-div1")
-    const moveIcons = modalDiv1.querySelectorAll("div")
-    for (let currentMoveIcon of moveIcons) {
-        currentMoveIcon.addEventListener("click", function(event) {
-            currentMoveIcon.focus();
-            if (currentMoveIcon === focus) {
-                console.log(currentMoveIcon)
+        console.log(formTitle.value)
+        console.log(formCategory.value)
+        if (formTitle.value) {
+            if (formImg.hasAttribute("style") === true && formCategory.value !== "") {
+                submitButton.removeAttribute("id", "grey")
             }
-            console.log(currentMoveIcon)
-        })  
-        
-    } 
-}
-*/
+        } else {
+            submitButton.setAttribute("id", "grey")
+        }
+    })
+    let formCategory = document.querySelector("#category")
+    formCategory.addEventListener("change", function (event) {
+        console.log(event.target.value)
+        if (formCategory.value !== "") {
+            if (formImg.hasAttribute("style") === true && formTitle.value) {
+                submitButton.removeAttribute("id", "grey")
+            }
+        } else {
+            submitButton.setAttribute("id", "grey")
+        }
+    })
 
+}
 
 function generateModal() {
     createModal();

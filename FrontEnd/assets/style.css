@@ -414,6 +414,19 @@ margin: auto;
 	padding: 3px;
 }
 
+
+.fa-arrows-up-down-left-right:before {
+	display: flex;
+    position: absolute;
+    margin-top: -113px;
+    margin-left: 30px;
+    color: white;
+    background-color: #000000;
+    font-size: 9px;
+    border-radius: 2px;
+    padding: 3px;
+}
+
 .modal-div2 {
 	width: 70%;
 	padding: 30px 0px;
@@ -514,12 +527,11 @@ margin: auto;
 	margin: 0px 0px 40px 0px;
 }
 
-#modal-submit-button {
+.modal-submit-button {
 	font-family: "Syne";
 	font-size: 14px;
 	font-weight: 700;
 	color: white;
-	background: #A7A7A7;
 	border: 0px;
 	border-radius: 60px;
 	padding: 10px 0px;
@@ -528,6 +540,11 @@ margin: auto;
 	align-self: center;
 	
 }
+
+#grey {
+	background: #A7A7A7;
+}
+
 
 #modal-form-submit {
 	border-top: 1px solid #B3B3B3;
