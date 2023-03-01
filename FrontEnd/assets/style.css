@@ -3,6 +3,8 @@
    License: none (public domain)
 */
 
+	
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -207,10 +209,8 @@ footer nav ul {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
-
 	padding-bottom: 50px;;
 }
-
 .filter {
 	background-color: white;
 	font-family: 'Syne';
@@ -222,34 +222,28 @@ footer nav ul {
 	padding: 1% 2%;
 	margin: 0px 10px;
 }
-
 .filter:hover {
 	background-color: #1D6154;
 	color:white;
 }
-
 .filter:active {
 	background-color: #1D6154;
 	color:white;
 }
-
 .filter:focus {
 	background-color: #1D6154;
 	color:white;
 }
-
 /* Gestion de la page login.html */
 #page-login {
 	font-weight: 600;
 }
-
 #login {
 	width: 50%;
 margin: auto;
 }
 #login > * {
 	text-align: center;
-
 }
 #login h2{
 	margin-bottom: 20px;
@@ -260,7 +254,6 @@ margin: auto;
 	display: flex;
 	flex-direction: column;
 }
-
 #login input {
 	height: 50px;
 	font-size: 1.2em;
@@ -270,7 +263,6 @@ margin: auto;
 #login label {
 	margin: 2em 0 1em 0;
 }
-
 /* Gestion des modifications sur la page index.html pour l'administrateur */
 .edit-menu {
 	position: absolute;
@@ -284,7 +276,6 @@ margin: auto;
 	font-family: 'Work Sans';
 	padding: 7px 0px;
 }
-
 .edit-mod {
 	color: white;
 	font-size: 16px;
@@ -293,11 +284,9 @@ margin: auto;
 	flex-direction: row;
 	padding: 0px 10px;
 }
-
 .edit-mod p {
 	padding: 0px 10px;
 }
-
 .edit-menu button {
 	background: #FFFFFF;
 	border-radius: 60px;
@@ -307,21 +296,18 @@ margin: auto;
 	font-family: 'Work Sans';
 	border: 0px;
 }
-
 .edit-pic {
 	width: 80%;
 	margin: auto;
 	padding: 10px 0px;
 	display: flex;
 }
-
 .edit-projects {
 	font-size: 14px;
 	font-weight: 500;
 	padding: 10px 20px;
 	font-family: 'Work Sans';
 }
-
 .edit-pic button, .edit-projects button {
 	font-family: "Work Sans";
 	font-size: 14px;
@@ -331,16 +317,13 @@ margin: auto;
 	padding: 0px 10px;
 	text-decoration: none;
 }
-
 .edit-pic a:visited, .edit-projects a:visited {
 	text-decoration: none;
 	color: black;
 }
-
 .edit-pic .fa-regular, .edit-projects .fa-regular {
 	color: black;
 }
-
 /* Gestion de la modale */
 .modal {
 	position: fixed;
@@ -353,7 +336,6 @@ margin: auto;
 	max-width: 1140px;
 	background: rgba(0, 0, 0, 0.3);
 }
-
 .modal-wrapper {
 	display: flex;
 	flex-direction: column;
@@ -362,13 +344,12 @@ margin: auto;
 	background: white;
 	border-radius: 10px;
 }
-
 .modal-icons {
 	width: 100%;
 	display: flex;
 	flex-direction: row-reverse;
 	justify-content: space-between;
-	padding: 15px 0px;
+	padding-top: 10px;
 }
 #modal-return {
 	align-self: flex-start;
@@ -378,29 +359,25 @@ margin: auto;
 	align-self: flex-end;
 	padding-right: 20px;
 }
-
 .modal-title {
 	font-family: "Work Sans";
 	font-size: 26px;
 	font-weight: 400;
 	padding: 10px 0px;
 }
-
 .modal-div1 {
 	width: 70%;
-	padding: 30px 0px;
+	padding: 10px 0px;
 	border-bottom: 1px solid #B3B3B3;
 	display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     grid-column-gap: 5px;
     grid-row-gap: 5px;
 }
-
 .modal-div1 img {
 	height: 90px;
 	width: auto;
 }
-
 .fa-trash-alt:before, .fa-trash-can:before{
 	display: flex;
 	align-items: center;
@@ -413,8 +390,6 @@ margin: auto;
 	border-radius: 2px;
 	padding: 3px;
 }
-
-
 .fa-arrows-up-down-left-right:before {
 	display: flex;
     position: absolute;
@@ -426,10 +401,9 @@ margin: auto;
     border-radius: 2px;
     padding: 3px;
 }
-
 .modal-div2 {
 	width: 70%;
-	padding: 30px 0px;
+	padding-top: 15px;
 	display: flex;
 	flex-direction: column;
 }
@@ -438,7 +412,6 @@ margin: auto;
 	display: flex;
 	flex-direction: column;
 }
-
 .form-img {
 	display: flex;
 	flex-direction: column;
@@ -446,7 +419,6 @@ margin: auto;
     background: #E8F1F7;
     border-radius: 3px;
 }
-
 #preview-img {
 	font-size: 45px;
 	background: #E8F1F7;
@@ -458,23 +430,19 @@ margin: auto;
 	font-weight: 500;
 	color: #3D3D3D;
 	margin: 10px 0px;
-
 }
-
 .current-img {
 	display: flex;
 	align-items: center;
 	height: 192px;
 	width: auto;
 }
-
 .label-img {
 	background: #CBD6DC;
 	border-radius: 50px;
 	color: #306685;
 	padding: 10px 30px;
 }
-
 .text-img {
 	font-size: 10px;
 	font-weight: 400;
@@ -490,7 +458,6 @@ margin: auto;
 	font-size: 14px;
 	color: #444444;
 }
-
 #category {
 	height: 51px;
 	background: white;
@@ -501,7 +468,6 @@ margin: auto;
 	font-size: 14px;
 	color: #444444;
 }
-
 .modal-add-button {
 	font-family: "Syne";
 	font-size: 14px;
@@ -512,9 +478,8 @@ margin: auto;
 	border-radius: 60px;
 	padding: 10px 0px;
 	width: 250px;
-	margin: 30px 0px 15px 0px;
+	margin: 20px 0px 10px 0px;
 }
-
 .modal-delete-button {
 	font-family: "Syne";
 	font-size: 14px;
@@ -524,9 +489,8 @@ margin: auto;
 	border: 0px;
 	padding: 10px 0px;
 	width: 250px;
-	margin: 0px 0px 40px 0px;
+	margin: 0px 0px 15px 0px;
 }
-
 .modal-submit-button {
 	font-family: "Syne";
 	font-size: 14px;
@@ -538,24 +502,30 @@ margin: auto;
 	width: 250px;
 	margin: 30px 0px;
 	align-self: center;
-	
 }
-
 #grey {
 	background: #A7A7A7;
 }
-
-
 #modal-form-submit {
 	border-top: 1px solid #B3B3B3;
 	margin-top: 40px;
 }
-@media screen and (max-width: 500px) {
+/* Gestion responsive des filtres et de la modale */
+@media screen and (max-width: 850px) {
+.modal-div1 {
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+}
+@media screen and (max-width: 650px) {
 .filters {
 	flex-wrap: wrap;
 }
-
 .filter {
 	margin: 10px;
 }
+.modal-div1 {
+	grid-template-columns: 1fr 1fr 1fr;
 }
+}
+

@@ -52,7 +52,7 @@ function addProjects(projects) {
     }
 }
 
-// On vide le container "gallery"
+// Suppression du contenu du container "gallery"
 function emptyGallery() {
     divGallery.innerHTML = "";
 }
@@ -130,16 +130,6 @@ function useFilter() {
 }
 
 // Génération de l'affichage des projets et des filtres avec 2 appels à l'API
-
-function generateProjects() {
-    getProjects().then(json => {
-        if (json) {
-            emptyGallery();
-            addProjects(json)
-        } else {
-            console.log("Problèmes d'accès au serveur");
-        }})
-}
  /*  
 function generateFilters()  {
     getProjects().then(projects => {
@@ -252,6 +242,7 @@ function hideEditPage() {
     hUl.replaceChild(loginBtn, logoutBtn)
 }
 
+// Gestion du logout
 function logout () {
     const logout = header.querySelector("nav > ul > li > a")
     logout.addEventListener("click", function() {
@@ -313,7 +304,7 @@ function galleryModal () {
         } 
 })}
 
-
+// Création de l'ensemble des éléments de la modale
 function createModal () {
     let modal = document.createElement("aside");
     modal.setAttribute("class", "modal");
@@ -413,6 +404,7 @@ function createModal () {
     document.querySelector("#img").addEventListener('change', updateFormImg);
 }
 
+// Gestion de l'affichage de la preview du formulaire modale
 function updateFormImg () {
     document.querySelector("#preview-img").setAttribute("style", "display: none;");
     document.querySelector(".label-img").setAttribute("style", "display: none;");
@@ -423,6 +415,7 @@ function updateFormImg () {
     currentImg.src = window.URL.createObjectURL(currentFile[0]);
 }
 
+// Gestion du retour arrière dans la modale
 function removeFormElements () {
     document.querySelector("#preview-img").removeAttribute("style", "display: none;");
     document.querySelector(".label-img").removeAttribute("style", "display: none;");
@@ -466,6 +459,7 @@ function emptyModal () {
     modalDiv1.innerHTML = "";
 }
 
+// Gestion de la suppression de projets
 async function deleteProject(id) {
     try {
     let res = await fetch(urlApi + "/works/" + id, {
@@ -487,6 +481,15 @@ async function deleteProject(id) {
     }
 }
 
+function generateProjects() {
+    getProjects().then(json => {
+        if (json) {
+            emptyGallery();
+            addProjects(json)
+        } else {
+            console.log("Problèmes d'accès au serveur");
+        }})
+}
 
 function selectProject() {
         const modalDeleteIcons = document.querySelectorAll(".modal-img > i")
@@ -497,7 +500,6 @@ function selectProject() {
             })  
         }
     }
-
 
 function deleteModal() {
     document.querySelector(".modal-delete-button").addEventListener("click", function() {
@@ -537,6 +539,7 @@ function emptyModalForm () {
     removeFormElements();
 }
 
+// Gestion de l'ajout de nouveaux projets
 function submitProject() {
     changeInputModalButton();
     let formSubmit = document.querySelector(".modal-form");
