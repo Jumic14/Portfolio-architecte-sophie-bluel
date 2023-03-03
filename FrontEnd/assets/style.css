@@ -515,7 +515,6 @@ margin: auto;
 .modal-div1 {
 	grid-template-columns: 1fr 1fr 1fr 1fr;
 }
-
 }
 @media screen and (max-width: 650px) {
 .filters {

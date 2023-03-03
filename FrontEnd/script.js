@@ -128,38 +128,6 @@ function useFilter() {
         activeFilter();
     })
 }
-
-// Génération de l'affichage des projets et des filtres avec 2 appels à l'API
- /*  
-function generateFilters()  {
-    getProjects().then(projects => {
-        let categories = getFilterCategories(projects);
-        addFilters(categories);
-        useFilter(categories);
-       })
-}
-*/ 
-
-// Génération de l'affichage des projets et des filtres avec 1 appel à l'API
-function generatePage () {
-    getProjects()
-    .then(projects => {
-        if (projects) {
-            emptyGallery();
-            addProjects(projects)
-            return projects
-        } else {
-            console.log("Problèmes d'accès au serveur");
-        }})
-        .then(projects => {
-            let categories = getFilterCategories(projects);
-            addFilters(categories);
-            useFilter(categories);
-           })    
-}
-
-generatePage();
-
 // Gestion du mode édition
 // Création des éléments HTML / Affichage du mode édition / Gestion du logout 
 function createEditHeader() {
@@ -251,49 +219,90 @@ function logout () {
     })
 }
 
-function generateEditPage() {
-    createEditPage();
-if (token !== null) {
-    logout()
-} else {
-    hideEditPage();
-}
-}
-
-generateEditPage();
-
 // Gestion de la modale
 /**
  * Création des éléments HTML des projets
  * @param {JSON} projects
  */
 function addModalProjects(projects) {  
-    const modalDiv1 = document.querySelector(".modal-div1")                       
+    const modalDiv1 = document.querySelector(".modal-div1")  
+    modalDiv1.setAttribute("ondragover", "return false");                     
     for (let project of projects) {
         let newFigure = document.createElement("figure");
-      
         modalDiv1.appendChild(newFigure);    
         let modalImg = document.createElement("div");
+        modalImg.setAttribute("id", project.id)   
         modalImg.setAttribute("class", "modal-img");
-        modalImg.setAttribute("id", project.id)                 
+        newFigure.setAttribute("id", modalImg.getAttribute("id"));    
+        newFigure.setAttribute("class", "target");        
+        newFigure.setAttribute("ondragstart", "return false");
         let newImage = document.createElement("img");          
-        newImage.src = project.imageUrl;                        
-        let newTitle = document.createElement("figcaption");    
-        newTitle.innerText = "éditer";   
-
+        newImage.src = project.imageUrl;                      
+        let newCaption = document.createElement("figcaption");    
+        newCaption.innerText = "éditer";   
+        let projectImage = document.createElement("img");
+        projectImage.src = project.imageUrl;
+        projectImage.setAttribute("style", "display: none;");
+        projectImage.setAttribute("class", "img");
+        let projectTitle = document.createElement("p");
+        projectTitle.value = project.title;
+        projectTitle.setAttribute("style", "display: none;")
+        projectTitle.setAttribute("class", "title");
+        let projectCategory = document.createElement("p");
+        projectCategory.value = project.category.id;
+        projectCategory.setAttribute("style", "display: none;")
+        projectCategory.setAttribute("class", "category-id")
         let trashIcon = document.createElement("i");
         trashIcon.setAttribute("class", "fa-solid fa-trash-can");                
         modalImg.append(trashIcon, newImage);
-        newFigure.append(modalImg, newTitle);  
+        newFigure.append(modalImg, newCaption, projectTitle, projectCategory, projectImage);  
     }
     if (modalDiv1.firstChild === null) {
         return
     }
     let moveIcon = document.createElement("i");
     moveIcon.setAttribute("class", "fa-solid fa-arrows-up-down-left-right")
-    modalDiv1.firstChild.appendChild(moveIcon);
-    
+    moveIcon.setAttribute("id", "move")
+    let galleryFirstChild = modalDiv1.firstChild;
+    galleryFirstChild.appendChild(moveIcon);
+    galleryFirstChild.removeAttribute("class", "target");
+    galleryFirstChild.setAttribute("class", "source")
+    galleryFirstChild.removeAttribute("ondragstart");
     selectProject();
+}
+
+// Gestion du déplacement des projets dans la modale
+function moveImg (ev) {
+    let source = document.querySelector(".source");
+    if (source == null) {
+        return
+    }
+    const targets = document.querySelectorAll(".target")
+    for (let target of targets) {
+        target.addEventListener("dragover", (ev) => {
+            ev.preventDefault();
+        })
+        target.addEventListener("drop", (ev) => {
+            ev.preventDefault();
+            let source = document.querySelector(".modal-div1").firstChild;
+            let newPosition = (ev.target.parentNode).parentElement;
+            newPosition.after(source)
+            let newFirstChild = document.querySelector(".modal-div1").firstChild
+            let moveIcon = document.createElement("i");
+            moveIcon.setAttribute("class", "fa-solid fa-arrows-up-down-left-right")
+            moveIcon.setAttribute("id", "move")
+            newFirstChild.appendChild(moveIcon)
+            newFirstChild.removeAttribute("class", "target");
+            newFirstChild.setAttribute("class", "source")
+            newFirstChild.removeAttribute("ondragstart");
+            source.removeAttribute("class");
+            source.querySelector("#move").removeAttribute("class")
+            source.setAttribute("class", "target")
+            source.setAttribute("ondragstart", "return false");
+            let lastChild = source.lastChild
+            source.removeChild(lastChild)     
+            })
+    }
 }
 
 function galleryModal () { 
@@ -301,8 +310,10 @@ function galleryModal () {
     .then(projects => {
         if (document.querySelector(".modal") !== null) {
             addModalProjects(projects)
+            moveImg()
         } 
-})}
+    })
+}
 
 // Création de l'ensemble des éléments de la modale
 function createModal () {
@@ -488,7 +499,8 @@ function generateProjects() {
             addProjects(json)
         } else {
             console.log("Problèmes d'accès au serveur");
-        }})
+        }
+    })
 }
 
 function selectProject() {
@@ -507,9 +519,8 @@ function deleteModal() {
         modalProjects.forEach(function(modalProject) {
             let id = modalProject.id;
             deleteProject(id);
-        }
-    )}
-    )
+        })
+    })
 }
 
 function addImg() {
@@ -556,7 +567,6 @@ function submitProject() {
         } else if (formCategory === "Hotels & restaurants") {
             category = 3
         } 
-
         const formData = new FormData();
         formData.append("title", title);
         formData.append("image", imageUrl);
@@ -568,7 +578,6 @@ function submitProject() {
             },
             body: formData,
         })
-        
         if (res.ok) {
             console.log("Le projet a été ajouté avec succès !")
             emptyModal();
@@ -623,7 +632,45 @@ function changeInputModalButton () {
             submitButton.setAttribute("id", "grey")
         }
     })
+}
 
+
+// Génération de l'affichage des projets et des filtres avec 2 appels à l'API
+ /*  
+function generateFilters()  {
+    getProjects().then(projects => {
+        let categories = getFilterCategories(projects);
+        addFilters(categories);
+        useFilter(categories);
+       })
+}
+*/ 
+
+// Fonctions générales pour gérer l'affichage dynamique
+function generatePage () {
+    getProjects()
+    .then(projects => {
+        if (projects) {
+            emptyGallery();
+            addProjects(projects)
+            return projects
+        } else {
+            console.log("Problèmes d'accès au serveur");
+        }})
+        .then(projects => {
+            let categories = getFilterCategories(projects);
+            addFilters(categories);
+            useFilter(categories);
+           })    
+}
+
+function generateEditPage() {
+    createEditPage();
+    if (token !== null) {
+        logout()
+    } else {
+        hideEditPage();
+    }
 }
 
 function generateModal() {
@@ -635,4 +682,6 @@ function generateModal() {
     submitProject();
 }
 
+generatePage();
+generateEditPage();
 generateModal();
