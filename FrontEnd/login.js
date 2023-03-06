@@ -34,7 +34,7 @@ function login () {
             window.localStorage.setItem("token", data.token);
             console.log(window.localStorage);
         })
-        window.setTimeout(checkToken, 100)
+        window.setTimeout(checkToken, 500)
     });
 }
 

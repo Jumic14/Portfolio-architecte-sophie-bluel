@@ -128,6 +128,7 @@ function useFilter() {
         activeFilter();
     })
 }
+
 // Gestion du mode édition
 // Création des éléments HTML / Affichage du mode édition / Gestion du logout 
 function createEditHeader() {
@@ -470,6 +471,21 @@ function emptyModal () {
     modalDiv1.innerHTML = "";
 }
 
+function returnModalGallery() {
+    document.querySelector("#modal-return").addEventListener("click",emptyModalForm)
+}
+
+function emptyModalForm () {
+    document.querySelector("#modal-return").setAttribute("style", "display: none;")
+    document.querySelector(".modal-title").innerText = ("Galerie photo");
+    document.querySelector(".modal-div1").removeAttribute("style", "display: none;");
+    document.querySelector(".modal-div2").setAttribute("style", "display: none;")
+    document.querySelector(".modal-add-button").removeAttribute("style", "display: none;");
+    document.querySelector(".modal-delete-button").removeAttribute("style", "display: none;");
+    document.querySelector(".modal-submit-button").setAttribute("id", "grey")
+    removeFormElements();
+}
+
 // Gestion de la suppression de projets
 async function deleteProject(id) {
     try {
@@ -533,21 +549,6 @@ function addImg() {
         document.querySelector(".modal-delete-button").setAttribute("style", "display: none;");
         returnModalGallery();
     })
-}
-
-function returnModalGallery() {
-    document.querySelector("#modal-return").addEventListener("click",emptyModalForm)
-}
-
-function emptyModalForm () {
-    document.querySelector("#modal-return").setAttribute("style", "display: none;")
-    document.querySelector(".modal-title").innerText = ("Galerie photo");
-    document.querySelector(".modal-div1").removeAttribute("style", "display: none;");
-    document.querySelector(".modal-div2").setAttribute("style", "display: none;")
-    document.querySelector(".modal-add-button").removeAttribute("style", "display: none;");
-    document.querySelector(".modal-delete-button").removeAttribute("style", "display: none;");
-    document.querySelector(".modal-submit-button").setAttribute("id", "grey")
-    removeFormElements();
 }
 
 // Gestion de l'ajout de nouveaux projets
@@ -633,18 +634,6 @@ function changeInputModalButton () {
         }
     })
 }
-
-
-// Génération de l'affichage des projets et des filtres avec 2 appels à l'API
- /*  
-function generateFilters()  {
-    getProjects().then(projects => {
-        let categories = getFilterCategories(projects);
-        addFilters(categories);
-        useFilter(categories);
-       })
-}
-*/ 
 
 // Fonctions générales pour gérer l'affichage dynamique
 function generatePage () {
