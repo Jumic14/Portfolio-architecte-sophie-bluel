@@ -221,42 +221,252 @@ function logout () {
 }
 
 // Gestion de la modale
+// Création de l'ensemble des éléments de la modale
+function createModal () {
+    createModalElement()
+    let modalWrapper = createModalWrapper();
+    let modalIcons = createModalIcons();
+    let modalTitle = createModalTitle();
+    let modalDiv1 = createModalDiv1();
+    let modalDiv2 = createModalDiv2();
+    let modalAddButton = createModalAddButton();
+    let modalDeleteButton = createModalDeleteButton();
+    modalWrapper.append(modalIcons, modalTitle, modalDiv1, modalDiv2, modalAddButton, modalDeleteButton);
+    document.querySelector("#img").addEventListener('change', updateFormImg);
+    galleryModal();
+    showModal();
+}
+
+function createModalElement() {
+    let modal = document.createElement("aside");
+    modal.setAttribute("class", "modal");
+    modal.setAttribute("style", "display: none;");
+    document.querySelector("body").appendChild(modal);
+    return modal
+}
+
+function createModalWrapper() {
+    let modalWrapper = document.createElement("section");
+    modalWrapper.setAttribute("class", "modal-wrapper");
+    document.querySelector(".modal").appendChild(modalWrapper);
+    return modalWrapper
+}
+
+function createModalTitle () {
+    let modalTitle = document.createElement("p")
+    modalTitle.setAttribute("class", "modal-title");
+    modalTitle.innerText = ("Galerie photo");
+    return modalTitle
+}
+
+function createModalIcons () {
+    let modalIcons = document.createElement("div");
+    modalIcons.setAttribute("class", "modal-icons")
+    let modalReturn = document.createElement("i");
+    modalReturn.setAttribute("class", "fa-solid fa-arrow-left");
+    modalReturn.setAttribute("id", "modal-return");
+    modalReturn.setAttribute("style", "display : none;")
+    let modalExit = document.createElement("i");
+    modalExit.setAttribute("class", "fa-solid fa-xmark");
+    modalExit.setAttribute("id", "modal-exit");
+    modalIcons.append(modalExit, modalReturn);
+    return modalIcons
+}
+
+function createModalDiv1 () {
+    let modalDiv1 = document.createElement("div");
+    modalDiv1.setAttribute("class", "modal-div1");
+    modalDiv1.setAttribute("id", "modal-div1")
+    return modalDiv1
+}
+
+function createModalDiv2 () {
+    let modalDiv2 = document.createElement("div");
+    modalDiv2.setAttribute("class", "modal-div2");
+    modalDiv2.setAttribute("style", "display: none;");
+    let modalForm = createModalForm();
+    modalDiv2.appendChild(modalForm);
+    return modalDiv2
+}
+
+function createModalAddButton () {
+    let modalAddButton = document.createElement("button");
+    modalAddButton.setAttribute("class", "modal-add-button");
+    modalAddButton.innerText = "Ajouter une photo";
+    return modalAddButton
+}
+
+function createModalDeleteButton () {
+    let modalDeleteButton = document.createElement("button");
+    modalDeleteButton.setAttribute("class", "modal-delete-button");
+    modalDeleteButton.innerText = "Supprimer la galerie";
+    return modalDeleteButton
+}
+
+// Création du formulaire de la modale et des ses éléments
+function createModalForm() {
+    let modalForm = createModalFormElement();
+    let formImg = createFormImg();
+    let previewDiv = createFormPreviewDiv();
+    let previewImg = createFormPreviewImg();
+    let currentImg = createFormCurrentImg();
+    previewDiv.append(previewImg, currentImg);
+    let labelImg = createFormLabelImg();
+    let inputImg = createFormInputImg();
+    let textImg = createFormTextImg();
+    formImg.append(previewDiv, labelImg, inputImg, textImg);
+    let formName = createFormName();
+    let inputName = createFormInputName();
+    let formCategory = createFormCategory();
+    let inputCategory = createFormInputCategory();
+    let defaultCategory = createFormDefaultCategory();
+    inputCategory.appendChild(defaultCategory);
+    getCategories().then(categories => {
+        for (let category of categories) {
+            let categoryOption = createFormCategoryOption(category);
+            inputCategory.appendChild(categoryOption);
+        }
+       })
+    let formSubmit = createFormSubmit();
+    let inputSubmit = createFormInputSubmit();
+    modalForm.append(formImg, formName, inputName, formCategory, inputCategory, formSubmit, inputSubmit);
+    return modalForm
+}
+
+function createModalFormElement () {
+    let modalForm = document.createElement("form")
+    modalForm.setAttribute("action", urlApi + "/works");
+    modalForm.setAttribute("method", "post");
+    modalForm.setAttribute("class", "modal-form");
+    return modalForm
+}
+
+function createFormImg () {
+    let formImg = document.createElement("div");
+    formImg.setAttribute("class", "form-img")
+    return formImg
+}
+
+function createFormPreviewDiv () {
+    let previewDiv = document.createElement("div");
+    previewDiv.setAttribute("class", "preview-div");
+    return previewDiv
+}
+
+function createFormPreviewImg () {
+    let previewImg = document.querySelector("i");
+    previewImg.setAttribute("class", "fa-regular fa-image");
+    previewImg.setAttribute("id", "preview-img");
+    return previewImg
+}
+
+function createFormCurrentImg () {
+    let currentImg = document.createElement('img');
+    currentImg.setAttribute("class", "current-img")
+    currentImg.setAttribute("style", "display: none;")
+    if (!currentImg.style) {
+        return
+    } else {
+    return currentImg
+    }
+}
+
+function createFormLabelImg () {
+    let labelImg = document.createElement("label");
+    labelImg.setAttribute("for", "img");
+    labelImg.setAttribute("class", "label-img");
+    labelImg.innerText = "+ Ajouter une photo";
+    return labelImg
+}
+
+function createFormInputImg () {
+    let inputImg = document.createElement("input");
+    inputImg.setAttribute("type", "file");
+    inputImg.setAttribute("name", "img")
+    inputImg.setAttribute("id", "img");
+    inputImg.setAttribute("style", "display: none;")
+    inputImg.setAttribute("accept", ".jpg, .jpeg, .png")
+    return inputImg
+}
+
+function createFormTextImg () {
+    let textImg = document.createElement("p");
+    textImg.setAttribute("class", "text-img");
+    textImg.innerText = "jpg, png : 4mo max"
+    return textImg
+}
+
+function createFormName () {
+    let formName = document.createElement("label");
+    formName.setAttribute("for", "name");
+    formName.innerText = ("Titre");
+    return formName
+}
+
+function createFormInputName () {
+    let inputName = document.createElement("input");
+    inputName.setAttribute("type", "text");
+    inputName.setAttribute("name", "title");
+    inputName.setAttribute("id", "title");
+    return inputName
+}
+
+function createFormCategory () {
+    let formCategory = document.createElement("label");
+    formCategory.setAttribute("for", "category");
+    formCategory.innerText = ("Catégorie");
+    return formCategory
+}
+
+function createFormInputCategory () {
+    let inputCategory = document.createElement("select");
+    inputCategory.setAttribute("name", "category")
+    inputCategory.setAttribute("id", "category")
+    return inputCategory
+}
+
+function createFormDefaultCategory () {
+    let defaultCategory = document.createElement("option");
+    defaultCategory.setAttribute("value", "");
+    return defaultCategory
+}
+
+function createFormCategoryOption (category) {
+    let categoryOption = document.createElement("option");
+    categoryOption.setAttribute("value", category.name);
+    categoryOption.innerText = category.name;
+    return categoryOption
+}
+
+function createFormSubmit () {
+    let formSubmit = document.createElement("label");
+    formSubmit.setAttribute("for", "submit");
+    formSubmit.setAttribute("id", "modal-form-submit");
+    return formSubmit
+}
+
+function createFormInputSubmit () {
+    let inputSubmit = document.createElement("input");
+    inputSubmit.setAttribute("type", "submit");
+    inputSubmit.setAttribute("value", "Valider");
+    inputSubmit.setAttribute("class", "modal-submit-button"); 
+    return inputSubmit
+}
+
 /**
- * Création des éléments HTML des projets
+ * Création des éléments HTML des projets de la galerie modale
  * @param {JSON} projects
  */
 function addModalProjects(projects) {  
     const modalDiv1 = document.querySelector(".modal-div1")  
     modalDiv1.setAttribute("ondragover", "return false");                     
     for (let project of projects) {
-        let newFigure = document.createElement("figure");
-        modalDiv1.appendChild(newFigure);    
-        let modalImg = document.createElement("div");
-        modalImg.setAttribute("id", project.id)   
-        modalImg.setAttribute("class", "modal-img");
-        newFigure.setAttribute("id", modalImg.getAttribute("id"));    
-        newFigure.setAttribute("class", "target");        
-        newFigure.setAttribute("ondragstart", "return false");
-        let newImage = document.createElement("img");          
-        newImage.src = project.imageUrl;                      
-        let newCaption = document.createElement("figcaption");    
-        newCaption.innerText = "éditer";   
-        let projectImage = document.createElement("img");
-        projectImage.src = project.imageUrl;
-        projectImage.setAttribute("style", "display: none;");
-        projectImage.setAttribute("class", "img");
-        let projectTitle = document.createElement("p");
-        projectTitle.value = project.title;
-        projectTitle.setAttribute("style", "display: none;")
-        projectTitle.setAttribute("class", "title");
-        let projectCategory = document.createElement("p");
-        projectCategory.value = project.category.id;
-        projectCategory.setAttribute("style", "display: none;")
-        projectCategory.setAttribute("class", "category-id")
-        let trashIcon = document.createElement("i");
-        trashIcon.setAttribute("class", "fa-solid fa-trash-can");                
-        modalImg.append(trashIcon, newImage);
-        newFigure.append(modalImg, newCaption, projectTitle, projectCategory, projectImage);  
+        let newFigure = createProjectFigure(project)
+        let newCaption = createProjectCaption()
+        let projectImage = createProjectImage(project);
+        let projectTitle = createProjectTitle(project)
+        let projectCategory = createProjectCategory(project)
+        newFigure.append(newCaption, projectTitle, projectCategory, projectImage);  
     }
     if (modalDiv1.firstChild === null) {
         return
@@ -270,6 +480,59 @@ function addModalProjects(projects) {
     galleryFirstChild.setAttribute("class", "source")
     galleryFirstChild.removeAttribute("ondragstart");
     selectProject();
+}
+
+function createModalImg (project) {
+    let modalImg = document.createElement("div");
+    modalImg.setAttribute("id", project.id)   
+    modalImg.setAttribute("class", "modal-img");
+    let newImage = document.createElement("img");          
+    newImage.src = project.imageUrl; 
+    let trashIcon = document.createElement("i");
+    trashIcon.setAttribute("class", "fa-solid fa-trash-can");                
+    modalImg.append(trashIcon, newImage);
+    return modalImg
+}
+
+function createProjectFigure (project) {
+    let newFigure = document.createElement("figure");
+    let modalImg = createModalImg(project) 
+        document.querySelector(".modal-div1").appendChild(newFigure);    
+        newFigure.setAttribute("id", modalImg.getAttribute("id"));    
+        newFigure.setAttribute("class", "target");        
+        newFigure.setAttribute("ondragstart", "return false");
+        newFigure.appendChild(modalImg)
+        return newFigure
+}
+
+function createProjectCaption () {
+    let newCaption = document.createElement("figcaption");    
+    newCaption.innerText = "éditer";  
+    return newCaption
+}
+
+function createProjectImage (project) {
+    let projectImage = document.createElement("img");
+    projectImage.src = project.imageUrl;
+    projectImage.setAttribute("style", "display: none;");
+    projectImage.setAttribute("class", "img");
+    return projectImage
+}
+
+function createProjectTitle (project) {
+    let projectTitle = document.createElement("p");
+    projectTitle.value = project.title;
+    projectTitle.setAttribute("style", "display: none;")
+    projectTitle.setAttribute("class", "title");
+    return projectTitle
+}
+
+function createProjectCategory (project) {
+    let projectCategory = document.createElement("p");
+        projectCategory.value = project.category.id;
+        projectCategory.setAttribute("style", "display: none;")
+        projectCategory.setAttribute("class", "category-id")
+        return projectCategory
 }
 
 // Gestion du déplacement des projets dans la modale
@@ -314,106 +577,6 @@ function galleryModal () {
             moveImg()
         } 
     })
-}
-
-// Création de l'ensemble des éléments de la modale
-function createModal () {
-    let modal = document.createElement("aside");
-    modal.setAttribute("class", "modal");
-    modal.setAttribute("style", "display: none;");
-    document.querySelector("body").appendChild(modal);
-    let modalWrapper = document.createElement("section")
-    modalWrapper.setAttribute("class", "modal-wrapper");
-    modal.appendChild(modalWrapper)
-    let modalIcons = document.createElement("div");
-    modalIcons.setAttribute("class", "modal-icons")
-    let modalReturn = document.createElement("i");
-    modalReturn.setAttribute("class", "fa-solid fa-arrow-left");
-    modalReturn.setAttribute("id", "modal-return");
-    modalReturn.setAttribute("style", "display : none;")
-    let modalExit = document.createElement("i");
-    modalExit.setAttribute("class", "fa-solid fa-xmark");
-    modalExit.setAttribute("id", "modal-exit");
-    modalIcons.append(modalExit, modalReturn);
-    let modalTitle = document.createElement("p")
-    modalTitle.setAttribute("class", "modal-title");
-    modalTitle.innerText = ("Galerie photo");
-    let modalDiv1 = document.createElement("div");
-    modalDiv1.setAttribute("class", "modal-div1");
-    modalDiv1.setAttribute("id", "modal-div1")
-    let modalDiv2 = document.createElement("div");
-    modalDiv2.setAttribute("class", "modal-div2");
-    modalDiv2.setAttribute("style", "display: none;");
-    let modalForm = document.createElement("form")
-    modalForm.setAttribute("action", urlApi + "/works");
-    modalForm.setAttribute("method", "post")
-    modalForm.setAttribute("class", "modal-form")
-    let formImg = document.createElement("div");
-    formImg.setAttribute("class", "form-img")
-    let previewDiv = document.createElement("div");
-    previewDiv.setAttribute("class", "preview-div");
-    let previewImg = document.querySelector("i");
-    previewImg.setAttribute("class", "fa-regular fa-image");
-    previewImg.setAttribute("id", "preview-img");
-    let currentImg = document.createElement('img');
-    currentImg.setAttribute("class", "current-img")
-    currentImg.setAttribute("style", "display: none;")
-    previewDiv.append(previewImg, currentImg);
-    let labelImg = document.createElement("label");
-    labelImg.setAttribute("for", "img");
-    labelImg.setAttribute("class", "label-img");
-    labelImg.innerText = "+ Ajouter une photo";
-    let inputImg = document.createElement("input");
-    inputImg.setAttribute("type", "file");
-    inputImg.setAttribute("name", "img")
-    inputImg.setAttribute("id", "img");
-    inputImg.setAttribute("style", "display: none;")
-    inputImg.setAttribute("accept", ".jpg, .jpeg, .png")
-    let textImg = document.createElement("p");
-    textImg.setAttribute("class", "text-img");
-    textImg.innerText = "jpg, png : 4mo max"
-    formImg.append(previewDiv, labelImg, inputImg, textImg)
-    let formName = document.createElement("label");
-    formName.setAttribute("for", "name");
-    formName.innerText = ("Titre");
-    let inputName = document.createElement("input");
-    inputName.setAttribute("type", "text");
-    inputName.setAttribute("name", "title");
-    inputName.setAttribute("id", "title");
-    let formCategory = document.createElement("label");
-    formCategory.setAttribute("for", "category");
-    formCategory.innerText = ("Catégorie");
-    let inputCategory = document.createElement("select");
-    inputCategory.setAttribute("name", "category")
-    inputCategory.setAttribute("id", "category")
-    let defaultCategory = document.createElement("option");
-    defaultCategory.setAttribute("value", "");
-    inputCategory.appendChild(defaultCategory);
-    getCategories().then(categories => {
-        for (let category of categories) {
-            let categoryOption = document.createElement("option");
-            categoryOption.setAttribute("value", category.name);
-            categoryOption.innerText = category.name;
-            inputCategory.appendChild(categoryOption);
-        }
-       })
-    let formSubmit = document.createElement("label");
-    formSubmit.setAttribute("for", "submit");
-    formSubmit.setAttribute("id", "modal-form-submit");
-    let inputSubmit = document.createElement("input");
-    inputSubmit.setAttribute("type", "submit");
-    inputSubmit.setAttribute("value", "Valider");
-    inputSubmit.setAttribute("class", "modal-submit-button"); 
-    modalForm.append(formImg, formName, inputName, formCategory, inputCategory, formSubmit, inputSubmit)
-    modalDiv2.appendChild(modalForm);
-    let modalAddButton = document.createElement("button");
-    modalAddButton.setAttribute("class", "modal-add-button");
-    modalAddButton.innerText = "Ajouter une photo"
-    let modalDeleteButton = document.createElement("button");
-    modalDeleteButton.setAttribute("class", "modal-delete-button");
-    modalDeleteButton.innerText = "Supprimer la galerie";
-    modalWrapper.append(modalIcons, modalTitle, modalDiv1, modalDiv2, modalAddButton, modalDeleteButton, modalDeleteButton)
-    document.querySelector("#img").addEventListener('change', updateFormImg);
 }
 
 // Gestion de l'affichage de la preview du formulaire modale
@@ -489,15 +652,12 @@ function emptyModalForm () {
 // Gestion de la suppression de projets
 async function deleteProject(id) {
     try {
-    let res = await fetch(urlApi + "/works/" + id, {
+    await fetch(urlApi + "/works/" + id, {
         method: "DELETE", 
         headers: {
             "Authorization": "Bearer " + token
         }
-    }); 
-    if (!res.ok) {
-        throw new Error("Erreur lors de la suppression du projet");
-    }
+    })
     console.log("Le projet a été supprimé avec succès");
     emptyModal();
     galleryModal();
@@ -612,8 +772,6 @@ function changeInputModalButton () {
     })
     let formTitle = document.querySelector("#title");
     formTitle.addEventListener("change", function (event) {
-        console.log(formTitle.value)
-        console.log(formCategory.value)
         if (formTitle.value) {
             if (formImg.hasAttribute("style") === true && formCategory.value !== "") {
                 submitButton.removeAttribute("id", "grey")
@@ -624,7 +782,6 @@ function changeInputModalButton () {
     })
     let formCategory = document.querySelector("#category")
     formCategory.addEventListener("change", function (event) {
-        console.log(event.target.value)
         if (formCategory.value !== "") {
             if (formImg.hasAttribute("style") === true && formTitle.value) {
                 submitButton.removeAttribute("id", "grey")
@@ -664,8 +821,6 @@ function generateEditPage() {
 
 function generateModal() {
     createModal();
-    galleryModal();
-    showModal();
     deleteModal();
     addImg();
     submitProject();
